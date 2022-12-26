@@ -11,10 +11,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# User-model
+
+AUTH_USER_MODEL = 'yamdb.User'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'api',
+    'yamdb',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
