@@ -12,20 +12,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'api',
-    'yamdb',
+    'users',
+    'reviews',
     'drf_yasg',
+    'rest_framework_simplejwt',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -150,7 +150,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
-AUTH_USER_MODEL = 'yamdb.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Swagger
 
@@ -169,6 +169,6 @@ SWAGGER_SETTINGS = {
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'yamdb17@gmail.com'
-EMAIL_HOST_PASSWORD = '1234!@!@y'
+EMAIL_HOST_PASSWORD = 'nbbtxoqdewloiubm'
 EMAIL_PORT = 587
 
