@@ -1,78 +1,12 @@
-from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from users.models import User
 from .validators import validate_year
-
-
-USER = 'user'
-ADMIN = 'admin'
-MODERATOR = 'moderator'
-
-ROLE_PERMISSION = [
-    (USER, 'Аутентифицированный пользователь'),
-    (MODERATOR, 'Модератор'),
-    (ADMIN, 'Администратор')
-]
-
-
-class User(AbstractUser):
-    """Модель для пользователей.
-
-    Attributes:
-        username: отображаемое имя пользователя.
-        email: почта пользователя.
-        first_name: имя.
-        last_name: фамилия.
-        bio: биография.
-        role: роль(права доступа).
-    """
-
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        null=False
-    )
-    email = models.EmailField(
-        max_length=254,
-        unique=True,
-        blank=False,
-        null=False
-    )
-    first_name = models.CharField(
-        'Имя',
-        max_length=150,
-        blank=True
-    )
-    last_name = models.CharField(
-        'Фамилия',
-        max_length=150,
-        blank=True
-    )
-    bio = models.TextField(
-        'Биография',
-        blank=True,
-    )
-    role = models.CharField(
-        'Роль',
-        max_length=20,
-        choices=ROLE_PERMISSION,
-        default=USER,
-        blank=True
-    )
-
-    def __str__(self):
-        return self.username
-
-    class Meta:
-        verbose_name = ('User')
-        verbose_name_plural = ('Users')
 
 
 class Category(models.Model):
     """Модель для категорий.
-
     Attributes:
         name: название категории.
         slug: уникальная строка категории.
@@ -97,7 +31,6 @@ class Category(models.Model):
 
 class Genre(models.Model):
     """Модель для жанров.
-
     Attributes:
         name: название жанра.
         slug : уникальная строка жанра.
@@ -122,7 +55,6 @@ class Genre(models.Model):
 
 class Title(models.Model):
     """Модель для произведений.
-
     Attributes:
         name: название произведения.
         year: год публикации.
@@ -169,7 +101,6 @@ class Title(models.Model):
 
 class Review(models.Model):
     """Модель для отзывов.
-
     Attributes:
         title: привязанное к отзыву произведение.
         text: текст отзыва.
@@ -217,4 +148,3 @@ class Review(models.Model):
 
     def __str__(self):
         return self.text
-
