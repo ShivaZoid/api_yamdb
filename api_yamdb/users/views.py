@@ -25,7 +25,7 @@ class BaseUserSet(CreateModelMixin,
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
 
-        if 'me' in request.path:
+        if request.resolver_match.view_name == 'me':
             instance = User.objects.get(pk=self.request.user.id)
         else:
             instance = get_object_or_404(User, 
@@ -97,4 +97,5 @@ class AuthUserViewSet(BaseUserSet):
     http_method_names = ('get', 'patch',)
 
     def get_queryset(self):
+        print(self.request.resolver_match.view_name)
         return User.objects.filter(pk=self.request.user.id)
