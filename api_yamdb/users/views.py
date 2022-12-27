@@ -1,5 +1,7 @@
 from rest_framework import mixins
+from rest_framework.filters import SearchFilter
 from rest_framework.viewsets import GenericViewSet
+
 
 from .models import User
 from .permissions import UserIsAdmin
@@ -15,6 +17,5 @@ class UserViewSet(mixins.CreateModelMixin,
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (UserIsAdmin,)
-    #filter_backends
-    #search_fields
-    #throttle_classes
+    filter_backends = (SearchFilter, )
+    search_fields = ('username', )
