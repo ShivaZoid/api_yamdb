@@ -1,4 +1,4 @@
-from django.db import models
+from django.db.models import CharField, TextField, EmailField, Model
 from django.contrib.auth.models import AbstractUser
 
 
@@ -25,33 +25,33 @@ class User(AbstractUser):
         role: роль(права доступа).
     """
 
-    username = models.CharField(
+    username = CharField(
         max_length=150,
         unique=True,
         blank=False,
         null=False
     )
-    email = models.EmailField(
+    email = EmailField(
         max_length=254,
         unique=True,
         blank=False,
         null=False
     )
-    first_name = models.CharField(
+    first_name = CharField(
         'Имя',
         max_length=150,
         blank=True
     )
-    last_name = models.CharField(
+    last_name = CharField(
         'Фамилия',
         max_length=150,
         blank=True
     )
-    bio = models.TextField(
+    bio = TextField(
         'Биография',
         blank=True,
     )
-    role = models.CharField(
+    role = CharField(
         'Роль',
         max_length=20,
         choices=ROLE_PERMISSION,
@@ -65,3 +65,24 @@ class User(AbstractUser):
     class Meta:
         verbose_name = ('User')
         verbose_name_plural = ('Users')
+
+
+class UserRegistration(Model):
+    username = CharField(
+        max_length=150,
+        unique=True,
+        blank=False,
+        null=False
+    )
+    email = EmailField(
+        max_length=254,
+        unique=True,
+        blank=False,
+        null=False
+    )
+    confirmation_code = CharField(
+        max_length=16,
+        #unique=True,
+        blank=False,
+        null=False
+    )

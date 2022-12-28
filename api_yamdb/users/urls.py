@@ -7,6 +7,8 @@ from .views import (
     AdministrationViewSet, 
     AdministrationByUsernameViewSet,
     AuthUserViewSet,
+    SendEmailViewSet,
+    ReciveTokenJWTViewSet
 )
 
 
@@ -23,8 +25,14 @@ me_methods = AuthUserViewSet.as_view({
     'get': 'list',
     'patch': 'partial_update',
 })
+email_methods = SendEmailViewSet.as_view({
+    'post': 'create',
+})
+token_methods = ReciveTokenJWTViewSet.as_view()
 
 urlpatterns = [
+    path('v1/auth/signup/', email_methods, name='email'),
+    path('v1/auth/token/', token_methods, name='token'),
     path('v1/users/', users_methods, name='users'),
     path('v1/users/me/', me_methods, name='me'),
     path('v1/users/<username>/', usernames_methods, name='usernames'),
