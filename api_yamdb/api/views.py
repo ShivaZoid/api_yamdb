@@ -1,5 +1,5 @@
 from django.db.models import Avg
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 from rest_framework.filters import SearchFilter
@@ -11,6 +11,7 @@ from .serializers import (TitleGetSerializer,
                           TitlePostSerializer,
                           CategorySerializer,
                           GenreSerializer,
+                          ReviewSerializer,
                         )
 
 
@@ -65,3 +66,21 @@ class GenreViewSet(
     permission_classes = (IsAdminOrReadOnly)
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    #TODO нужны permission_classes на Админа, Модератора и Автора
+    #permission_classes = ()
+
+    def get_queryset(self):
+        title = get_object_or_404(
+            Title,
+            id=self.kwargs.get('title_id'))
+        return title.reviews.all()
+    
+    def perform_create(self, serializer):
+        title = get_object_or_404(
+            Title,
+            id=self.kwargs.get('title_id'))
+        serializer.save(author=self.request.user, title=title)
