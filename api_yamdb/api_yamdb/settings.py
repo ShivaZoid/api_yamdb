@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'reviews',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

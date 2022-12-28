@@ -151,6 +151,13 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
+    """Модель для комментариев к отзывам.
+    Attributes:
+        review: привязанный к комментарию отзыв.
+        text: текст комментария.
+        author: автор.
+        pub_date: дата публикации.
+    """
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,

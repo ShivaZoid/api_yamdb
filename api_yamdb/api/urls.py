@@ -23,16 +23,16 @@ router_v1.register(
     GenreViewSet,
     basename='genres'
 )
-router_v1.register(
-    r'titles/(?P<title_id>\d+)/reviews',
-    ...,
-    basename='reviews'
-)
-router_v1.register(
-    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
-    ...,
-    basename='comments'
-)
+#router_v1.register(
+#    r'titles/(?P<title_id>\d+)/reviews',
+#    ...,
+#    basename='reviews'
+#)
+#router_v1.register(
+#    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
+#    ...,
+#    basename='comments'
+#)
 
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
