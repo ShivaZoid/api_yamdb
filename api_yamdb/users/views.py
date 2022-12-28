@@ -10,6 +10,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import status
 from rest_framework.response import Response
 
+
 from .models import User
 from .permissions import UserIsAdmin, UserIsAuthenticated
 from .serializers import UserSerializer
