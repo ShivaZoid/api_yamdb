@@ -18,7 +18,7 @@ from .permissions import UserIsAdmin, UserIsAuthenticated
 from .serializers import (
     UserSerializer, 
     SendEmailSerializer, 
-    ReciveTokenSerializer,
+    ReceiveJWTSerializer,
 )
 from .exceptions import UserNotFound
 
@@ -108,12 +108,20 @@ class AuthUserViewSet(BaseUserSet):
 
 
 class SendEmailViewSet(BaseUserSet):
-    
+    """
+    POST - Получить код подтверждения на переданный email. 
+           Права доступа: Доступно без токена. 
+           Использовать имя 'me' в качестве username запрещено. 
+           Поля email и username должны быть уникальными.
+    """
     serializer_class = SendEmailSerializer
     http_method_names = ('post',)
 
 
-class ReciveTokenJWTViewSet(TokenObtainPairView):
-    
-    serializer_class = ReciveTokenSerializer
+class ReceiveJWTViewSet(TokenObtainPairView):
+    """
+    POST - Получение JWT-токена в обмен на username и confirmation code. 
+           Права доступа: Доступно без токена.
+    """
+    serializer_class = ReceiveJWTSerializer
     http_method_names = ('post',)

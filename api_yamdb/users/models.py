@@ -81,8 +81,8 @@ class UserRegistration(Model):
         null=False
     )
     confirmation_code = CharField(
-        max_length=16,
-        #unique=True,
+        max_length=32,
+        unique=True,
         blank=False,
         null=False
     )

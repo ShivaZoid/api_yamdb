@@ -1,11 +1,11 @@
-from django.core.mail import send_mail
 from secrets import token_urlsafe
+from django.core.mail import send_mail
 
-from rest_framework.serializers import ModelSerializer
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.serializers import ModelSerializer, Serializer, CharField
 
 from .models import User, UserRegistration
-from .exceptions import UserNotFound
+from .exceptions import UserNotFound, WrongData
+from .utils import get_tokens_for_user
 
 
 class UserSerializer(ModelSerializer):
@@ -25,6 +25,7 @@ class SendEmailSerializer(ModelSerializer):
         username = data['username']
 
         if User.objects.filter(email=email, username=username).exists():
+            #hash
             confirmation_code = token_urlsafe(16)
             message = (
                 f'Для получения токена на портале yamdb неообходимо,\n'
@@ -48,15 +49,22 @@ class SendEmailSerializer(ModelSerializer):
                 'Пользователь с таким username или email отсутствует')
 
 
-class ReciveTokenSerializer(TokenObtainPairSerializer):
+class ReceiveJWTSerializer(Serializer):
     
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+    username = CharField(max_length=60)
+    confirmation_code = CharField(max_length=32)
+            
+    def validate(self, data):
+        username = data['username']
+        confirmation_code = data['confirmation_code']
 
-        # Add custom claims
-        token['name'] = user.name
-        # ...
+        try:
+            user_obj = UserRegistration.objects.get(
+                            username=username,
+                            confirmation_code=confirmation_code)
 
-        return token
-    
+            tokens = get_tokens_for_user(user_obj)
+            user_obj.delete()
+            return {'tokens': tokens}
+        except Exception:
+            raise WrongData('Введены не правильные данные')
