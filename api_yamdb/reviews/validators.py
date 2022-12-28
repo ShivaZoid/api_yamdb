@@ -7,3 +7,4 @@ def validate_year(value):
     if value > now:
         raise ValidationError(
             'Проверьте год публикации'
+        )
