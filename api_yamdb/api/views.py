@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter
 
 from api.filters import TitleFilter
 from reviews.models import Title, Category, Genre, Review
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAdminModeratorAuthorOrReadOnly
 from .serializers import (TitleGetSerializer,
                           TitlePostSerializer,
                           CategorySerializer,
@@ -71,8 +71,7 @@ class GenreViewSet(
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    #TODO нужны permission_classes на - автора отзыва, модератора или администратора
-    #permission_classes = ()
+    permission_classes = (IsAdminModeratorAuthorOrReadOnly, )
 
     def get_queryset(self):
         title = get_object_or_404(
@@ -89,8 +88,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    #TODO нужны permission_classes на - автора отзыва, модератора или администратора
-    #permission_classes = ()
+    permission_classes = (IsAdminModeratorAuthorOrReadOnly, )
 
     def get_queryset(self):
         review = get_object_or_404(
