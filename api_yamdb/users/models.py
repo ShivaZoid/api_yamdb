@@ -23,6 +23,7 @@ class User(AbstractUser):
         last_name: фамилия.
         bio: биография.
         role: роль(права доступа).
+        confirmation_code: код авторизации аккаунта.
     """
 
     username = CharField(
@@ -56,7 +57,12 @@ class User(AbstractUser):
         max_length=20,
         choices=ROLE_PERMISSION,
         default=USER,
-        blank=True
+        blank=True,
+    )
+    confirmation_code = CharField(
+        max_length=32,
+        blank=False,
+        null=False,
     )
 
     def __str__(self):
@@ -65,24 +71,3 @@ class User(AbstractUser):
     class Meta:
         verbose_name = ('User')
         verbose_name_plural = ('Users')
-
-
-class UserRegistration(Model):
-    username = CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        null=False
-    )
-    email = EmailField(
-        max_length=254,
-        unique=True,
-        blank=False,
-        null=False
-    )
-    confirmation_code = CharField(
-        max_length=32,
-        unique=True,
-        blank=False,
-        null=False
-    )
