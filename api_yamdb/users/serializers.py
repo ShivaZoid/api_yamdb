@@ -37,6 +37,7 @@ class UserSerializer(ModelSerializer):
         """
         - Если в запросе есть username, проверяем его.
         """
+        # хеширровать код
         confirmation_code = token_urlsafe(16)
         data['confirmation_code'] = confirmation_code
         if data.get('username') is not None:
@@ -55,6 +56,7 @@ class SignUpSerializer(Serializer):
         username = data['username']
 
         if not User.objects.filter(email=email, username=username).exists():
+            # хеширровать код
             confirmation_code = token_urlsafe(16)
             data['confirmation_code'] = confirmation_code
         if username == 'me':
