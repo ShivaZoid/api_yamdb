@@ -7,14 +7,14 @@ from reviews.models import Title, Category, Genre, Review, Comment
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = '__all__'
+        exclude = ('id', )
         model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = '__all__'
+        exclude = ('id', )
         model = Genre
 
 
@@ -60,7 +60,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         slug_field='username',
         read_only=True
     )
-    
+
     class Meta:
         fields = '__all__'
         model = Review
