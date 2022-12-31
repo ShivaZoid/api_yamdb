@@ -19,10 +19,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleGetSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(
-        read_only=True,
-        many=True
-    )
+    category = CategorySerializer(read_only=True)
     genre = GenreSerializer(
         read_only=True,
         many=True
@@ -37,8 +34,7 @@ class TitleGetSerializer(serializers.ModelSerializer):
 class TitlePostSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
-        slug_field='slug',
-        many=True
+        slug_field='slug'
     )
     genre = serializers.SlugRelatedField(
         queryset=Genre.objects.all(),
@@ -70,7 +66,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         author = request.user
         title_id = self.context.get('view').kwargs.get('title_id')
         title = get_object_or_404(Title, pk=title_id)
-        review_exist = Review.objects.filter(title=title, author=author).exists()
+        review_exist = Review.objects.filter(
+            title=title,
+            author=author
+        ).exists()
 
         if request.method == 'POST' and review_exist:
             raise ValidationError('Trying to create more than one review')
