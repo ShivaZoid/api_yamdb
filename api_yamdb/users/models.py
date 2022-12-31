@@ -66,6 +66,7 @@ class User(AbstractUser):
         max_length=32,
         blank=False,
         null=False,
+        default='00000'
     )
 
     def __str__(self):
