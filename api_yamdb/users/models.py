@@ -1,6 +1,8 @@
 from django.db.models import CharField, TextField, EmailField, Model
 from django.contrib.auth.models import AbstractUser
 
+from .validators import validate_username
+
 
 USER = 'user'
 ADMIN = 'admin'
@@ -25,6 +27,7 @@ class User(AbstractUser):
         role: роль(права доступа).
         confirmation_code: код авторизации аккаунта.
     """
+
 
     username = CharField(
         max_length=150,
