@@ -28,7 +28,6 @@ class User(AbstractUser):
         confirmation_code: код авторизации аккаунта.
     """
 
-
     username = CharField(
         max_length=150,
         unique=True,
