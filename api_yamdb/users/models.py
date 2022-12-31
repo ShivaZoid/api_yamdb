@@ -1,4 +1,4 @@
-from django.db import models
+from django.db.models import CharField, TextField, EmailField, Model
 from django.contrib.auth.models import AbstractUser
 
 from .validators import validate_username
@@ -25,41 +25,47 @@ class User(AbstractUser):
         last_name: фамилия.
         bio: биография.
         role: роль(права доступа).
+        confirmation_code: код авторизации аккаунта.
     """
 
-    username = models.CharField(
-        validators=(validate_username,),
+
+    username = CharField(
         max_length=150,
         unique=True,
         blank=False,
         null=False
     )
-    email = models.EmailField(
+    email = EmailField(
         max_length=254,
         unique=True,
         blank=False,
         null=False
     )
-    first_name = models.CharField(
+    first_name = CharField(
         'Имя',
         max_length=150,
         blank=True
     )
-    last_name = models.CharField(
+    last_name = CharField(
         'Фамилия',
         max_length=150,
         blank=True
     )
-    bio = models.TextField(
+    bio = TextField(
         'Биография',
         blank=True,
     )
-    role = models.CharField(
+    role = CharField(
         'Роль',
         max_length=20,
         choices=ROLE_PERMISSION,
         default=USER,
-        blank=True
+        blank=True,
+    )
+    confirmation_code = CharField(
+        max_length=32,
+        blank=False,
+        null=False,
     )
 
     def __str__(self):

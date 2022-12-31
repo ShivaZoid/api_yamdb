@@ -1,3 +1,5 @@
+import os
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -174,10 +176,11 @@ SWAGGER_SETTINGS = {
 }
 
 # SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'yamdb17@gmail.com'
-EMAIL_HOST_PASSWORD = 'nbbtxoqdewloiubm'
+EMAIL_HOST_PASSWORD = 'ovnptlixrkrgdswc'
 EMAIL_PORT = 587
 
