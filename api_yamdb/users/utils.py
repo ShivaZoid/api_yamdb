@@ -1,5 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from django.core.mail import send_mail
+from django.template.loader import get_template
 
 
 def get_tokens_for_user(user):
@@ -14,6 +16,8 @@ def get_tokens_for_user(user):
 
 def send_confirm_code(username, email, confirmation_code):
     """Отправление письма с кодом подтверждения."""
+    current_context = {'username': username, 
+                       'confirmation_code': confirmation_code}
     message = (
         f'Для получения токена на портале yamdb неообходимо,\n'
         f'отправить POST запрос на адрес /api/v1/auth/token/\n'
@@ -26,4 +30,5 @@ def send_confirm_code(username, email, confirmation_code):
         recipient_list=[email,],
         from_email=None,
         fail_silently=False,
+        html_message=get_template('conf_email.html').render(current_context)
     )

@@ -72,6 +72,9 @@ DATABASES = {
     }
 }
 
+# Token reset (1 minute)
+
+PASSWORD_RESET_TIMEOUT = 60
 
 # Password validation
 
