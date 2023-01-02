@@ -13,7 +13,7 @@ class Category(models.Model):
     """
     name = models.CharField(
         'Название категории',
-        max_length=200
+        max_length=256
     )
     slug = models.SlugField(
         'Слаг категории',
@@ -37,7 +37,7 @@ class Genre(models.Model):
     """
     name = models.CharField(
         'Название жанра',
-        max_length=200
+        max_length=256
     )
     slug = models.SlugField(
         'Слаг жанра',
@@ -64,7 +64,7 @@ class Title(models.Model):
     """
     name = models.CharField(
         'Название произведения',
-        max_length=200,
+        max_length=256,
         db_index=True
     )
     year = models.IntegerField(
@@ -114,9 +114,7 @@ class Review(models.Model):
         related_name='reviews',
         verbose_name='Произведение'
     )
-    text = models.CharField(
-        max_length=200
-    )
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -164,9 +162,7 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='Отзыв'
     )
-    text = models.CharField(
-        max_length=200
-    )
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
