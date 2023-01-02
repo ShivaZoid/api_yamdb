@@ -17,8 +17,8 @@ from rest_framework.response import Response
 from .models import User
 from .permissions import SuperUserOrAdmin, UserIsAuthenticated
 from .serializers import (
-    UserSerializer, 
-    SignUpSerializer, 
+    UserSerializer,
+    SignUpSerializer,
     ReceiveJWTSerializer,
 )
 from .exceptions import UserNotFound
@@ -40,11 +40,11 @@ class BaseUserSet(CreateModelMixin,
         if request.resolver_match.view_name == 'me':
             instance = User.objects.get(username=self.request.user)
         else:
-            instance = get_object_or_404(User, 
+            instance = get_object_or_404(User,
                                          username=self.kwargs.get('username'))
 
-        serializer = self.get_serializer(instance, 
-                                         data=request.data, 
+        serializer = self.get_serializer(instance,
+                                         data=request.data,
                                          partial=partial,
                                         )
         serializer.is_valid(raise_exception=True)
@@ -66,11 +66,11 @@ class BaseUserSet(CreateModelMixin,
 class AdministrationViewSet(BaseUserSet):
     """
     GET - Получить список всех пользователей. Права доступа: Администратор.
-    POST - Добавить нового пользователя. 
-           Права доступа: Администратор 
+    POST - Добавить нового пользователя.
+           Права доступа: Администратор
            Поля email и username должны быть уникальными.
     """
-    queryset = User.objects.all()
+    queryset = User.objects.order_by('id')
     serializer_class = UserSerializer
     permission_classes = (SuperUserOrAdmin,)
     http_method_names = ('get', 'post')
@@ -82,8 +82,8 @@ class AdministrationViewSet(BaseUserSet):
 class AdministrationByUsernameViewSet(BaseUserSet,):
     """
     GET - Получить пользователя по username. Права доступа: Администратор
-    PATCH - Изменить данные пользователя по username. 
-            Права доступа: Администратор. 
+    PATCH - Изменить данные пользователя по username.
+            Права доступа: Администратор.
             Поля email и username должны быть уникальными.
     DELETE - Удалить пользователя по username. Права доступа: Администратор.
     """
@@ -92,7 +92,7 @@ class AdministrationByUsernameViewSet(BaseUserSet,):
     permission_classes = (SuperUserOrAdmin,)
     pagination_class = None
     http_method_names = ('get', 'patch', 'delete',)
-    
+
     def destroy(self, request, *args, **kwargs):
         instance = User.objects.filter(username=self.kwargs.get('username'))
         if not instance:
@@ -103,10 +103,10 @@ class AdministrationByUsernameViewSet(BaseUserSet,):
 
 class AuthUserViewSet(BaseUserSet):
     """
-    GET - Получить данные своей учетной записи Права доступа: 
+    GET - Получить данные своей учетной записи Права доступа:
           Любой авторизованный пользователь
-    PATCH - Изменить данные своей учетной записи 
-            Права доступа: Любой авторизованный пользователь 
+    PATCH - Изменить данные своей учетной записи
+            Права доступа: Любой авторизованный пользователь
             Поля email и username должны быть уникальными.
     """
     queryset = User.objects.all()
@@ -118,14 +118,14 @@ class AuthUserViewSet(BaseUserSet):
 
 class SignUpViewSet(BaseUserSet):
     """
-    POST - Получить код подтверждения на переданный email. 
-           Права доступа: Доступно без токена. 
-           Использовать имя 'me' в качестве username запрещено. 
+    POST - Получить код подтверждения на переданный email.
+           Права доступа: Доступно без токена.
+           Использовать имя 'me' в качестве username запрещено.
            Поля email и username должны быть уникальными.
     """
     serializer_class = SignUpSerializer
     http_method_names = ('post',)
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -136,7 +136,7 @@ class SignUpViewSet(BaseUserSet):
 
 class ReceiveJWTViewSet(TokenObtainPairView):
     """
-    POST - Получение JWT-токена в обмен на username и confirmation code. 
+    POST - Получение JWT-токена в обмен на username и confirmation code.
            Права доступа: Доступно без токена.
     """
     serializer_class = ReceiveJWTSerializer

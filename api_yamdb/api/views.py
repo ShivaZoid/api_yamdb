@@ -24,14 +24,14 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
     ).all()
-    filter_backends = (DjangoFilterBackend,)
-    http_method_names = ['get', 'post', 'patch', 'delete']
-    filter_class = TitleFilter
-    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
-        if self.action in ('list', 'retrieve'):
+        if self.request.method in ('POST', 'PATCH'):
             return TitlePostSerializer
         return TitleGetSerializer
 
@@ -82,7 +82,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         title = get_object_or_404(
             Title,
             id=self.kwargs.get('title_id'))
-        return title.reviews.all()
+        return title.reviews.order_by('id')
 
     def perform_create(self, serializer):
         title = get_object_or_404(
@@ -99,7 +99,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         review = get_object_or_404(
             Review,
             id=self.kwargs.get('review_id'))
-        return review.comments.all()
+        return review.comments.order_by('id')
 
     def perform_create(self, serializer):
         review = get_object_or_404(
