@@ -1,8 +1,8 @@
 from re import match
-from secrets import token_urlsafe
 
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.tokens import default_token_generator
 from rest_framework.serializers import (
     ModelSerializer, 
     Serializer, 
@@ -37,9 +37,6 @@ class UserSerializer(ModelSerializer):
         """
         - Если в запросе есть username, проверяем его.
         """
-        # хеширровать код
-        confirmation_code = token_urlsafe(16)
-        data['confirmation_code'] = confirmation_code
         if data.get('username') is not None:
             if match(r'^[\w.@+-]+', data['username']) is None:
                 raise NotValidUserName('Не корректный username')
@@ -52,42 +49,38 @@ class SignUpSerializer(Serializer):
     email = EmailField(max_length=254)
 
     def validate(self, data):
-        email = data['email']
+        """Валидируем username."""
         username = data['username']
-
-        if not User.objects.filter(email=email, username=username).exists():
-            # хеширровать код
-            confirmation_code = token_urlsafe(16)
-            data['confirmation_code'] = confirmation_code
         if username == 'me':
             raise NotValidUserName('Username "me" запрещен')
         if match(r'^[\w.@+-]+', data['username']) is None:
             raise NotValidUserName('Не корректный username')
-
         return data
 
     def create(self, validated_data):
         """
-        - Если пользователя зарегестрировал admin отправляем письмо на почту
+        - Если пользователя зарегестрировал admin
+          генерируем токен, отправляем письмо на почту
           и получаем данные из запроса (первый блок try)
-        - Если пользователь регистрируется самосстоятельно
-          создаем пользователя в бд и отправляем письмо (второй блок try)
+        - Если пользователь регистрируется самостоятельно
+          создаем пользователя в бд, генерируем токен, отправляем письмо 
+          и получаем данные из запроса (второй блок try)
         """
         email = validated_data['email']
         username = validated_data['username']
-        confirmation_code = validated_data.get('confirmation_code')
         
         try:
-            user_obj = User.objects.get(**validated_data)
-            confirmation_code = user_obj.confirmation_code
+            user = User.objects.get(**validated_data)
+            confirmation_code = default_token_generator.make_token(user)
             send_confirm_code(username, email, confirmation_code)
             return validated_data
         
         except Exception:
             try:
-                new_user = User.objects.create(**validated_data)
+                user = User.objects.create(**validated_data)
+                confirmation_code = default_token_generator.make_token(user)
                 send_confirm_code(username, email, confirmation_code)
-                return new_user
+                return user
             except IntegrityError:
                 raise UserFound(
                     'Пользователь с таким username или email существует') 
@@ -96,21 +89,19 @@ class SignUpSerializer(Serializer):
 class ReceiveJWTSerializer(Serializer):
     
     username = CharField(max_length=150)
-    confirmation_code = CharField(max_length=32)
+    confirmation_code = CharField(max_length=50)
             
     def validate(self, data):
         """
-        - Если пользователь есть в бд, выдаем токены
-        - Иначе 404 ошибка
+        - Если пользователь есть в бд, выдаем токены, иначе 404 ошибка.
+        - Если введен не правильный(истекший токен) - 400 ошибка.
         """
         username = data['username']
         confirmation_code = data['confirmation_code']
         user = get_object_or_404(User, username=username)
-        try:
-            user = User.objects.get(username=username,
-                                    confirmation_code=confirmation_code)
+
+        if default_token_generator.check_token(user, confirmation_code):
             tokens = get_tokens_for_user(user)
-            # После активации обновлять conf_code в bd
             return {'tokens': tokens}
-        except Exception:
-            raise WrongData('Введены не правильные данные')
+        else:
+            raise WrongData('Введены не правильные данные или токен истек')
