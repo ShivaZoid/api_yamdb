@@ -13,8 +13,7 @@ from .serializers import (TitleGetSerializer,
                           CategorySerializer,
                           GenreSerializer,
                           ReviewSerializer,
-                          CommentSerializer,
-                        )
+                          CommentSerializer,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -53,6 +52,7 @@ class CategoryViewSet(
     pagination_class = LimitOffsetPagination
     filter_backends = (SearchFilter, )
     search_fields = ('name', )
+    lookup_field = 'slug'
 
 
 class GenreViewSet(
@@ -71,6 +71,7 @@ class GenreViewSet(
     pagination_class = LimitOffsetPagination
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
+    lookup_field = 'slug'
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
