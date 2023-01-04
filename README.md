@@ -147,29 +147,6 @@ POST /api/v1/titles/
 }
 ~~~
 
-Добавление произведения:
-~~~
-Права доступа: Доступно без токена
-GET /api/v1/titles/{titles_id}/
-{
-  "id": 0,
-  "name": "string",
-  "year": 0,
-  "rating": 0,
-  "description": "string",
-  "genre": [
-    {
-      "name": "string",
-      "slug": "string"
-    }
-  ],
-  "category": {
-    "name": "string",
-    "slug": "string"
-  }
-}
-~~~
-
 Частичное обновление информации о произведении:
 ~~~
 Права доступа: Администратор
