@@ -20,7 +20,6 @@ from .models import User
 from .utils import get_tokens_for_user, send_confirm_code
 
 
-
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
