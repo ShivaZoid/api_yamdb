@@ -18,7 +18,6 @@ class TitleAdmin(admin.ModelAdmin):
         'year',
         'category',
         'description',
-        'genre',
     )
     search_fields = ('name',)
     list_filter = ('name',)
@@ -69,7 +68,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
     Attributes:
         list_display: отображаемые поля.
-        search_fields: интерфейс для поиска по автору.
+        search_fields: интерфейс для поиска по дате.
         list_filter: возможность фильтрации по дате.
     """
 
@@ -78,9 +77,8 @@ class ReviewAdmin(admin.ModelAdmin):
         'text',
         'author',
         'score',
-        'pub_date',
     )
-    search_fields = ('author',)
+    search_fields = ('pub_date',)
     list_filter = ('pub_date',)
     empty_value_display = '-пусто-'
 
@@ -91,7 +89,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     Attributes:
         list_display: отображаемые поля.
-        search_fields: интерфейс для поиска по автору.
+        search_fields: интерфейс для поиска по отзыву.
         list_filter: возможность фильтрации по отзыву.
     """
 
@@ -101,6 +99,6 @@ class CommentAdmin(admin.ModelAdmin):
         'author',
         'pub_date',
     )
-    search_fields = ('author',)
+    search_fields = ('review',)
     list_filter = ('review',)
     empty_value_display = '-пусто-'
