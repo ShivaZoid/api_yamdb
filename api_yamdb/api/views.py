@@ -2,11 +2,11 @@ from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import LimitOffsetPagination
 
-from api.filters import TitleFilter
 from reviews.models import Title, Category, Genre, Review
+from api.filters import TitleFilter
 from .permissions import IsAdminOrReadOnly, IsAdminModeratorAuthorOrReadOnly
 from .serializers import (TitleGetSerializer,
                           TitlePostSerializer,
@@ -36,12 +36,10 @@ class TitleViewSet(viewsets.ModelViewSet):
         return TitleGetSerializer
 
 
-class CategoryViewSet(
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
+class CategoryViewSet(mixins.CreateModelMixin,
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      viewsets.GenericViewSet,):
     """
     Получить список всех категорий. Права доступа: Доступно без токена
     """
@@ -55,12 +53,10 @@ class CategoryViewSet(
     lookup_field = 'slug'
 
 
-class GenreViewSet(
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
+class GenreViewSet(mixins.CreateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet,):
     """
     Получить список всех жанров. Права доступа: Доступно без токена
     """
