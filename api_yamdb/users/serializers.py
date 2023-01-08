@@ -4,32 +4,33 @@ from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework.serializers import (
-    ModelSerializer, 
-    Serializer, 
-    CharField, 
+    ModelSerializer,
+    Serializer,
+    CharField,
     EmailField
 )
 from .models import User
 from .utils import get_tokens_for_user, send_confirm_code
 from .exceptions import (
-    UserFound, 
-    WrongData, 
-    CantChangeRole, 
+    UserFound,
+    WrongData,
+    CantChangeRole,
     NotValidUserName,
 )
+
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio',
                   'role')
 
     def validate_role(self, value):
         """
         - Только admin и superuser могут изменять поле role.
         """
-        if (self.context['request'].user.role != 'admin' and not 
-              self.context['request'].user.is_superuser):
+        if (self.context['request'].user.role != 'admin' and not
+                self.context['request'].user.is_superuser):
             raise CantChangeRole('У вас нету прав для изменения role')
         return value
 
@@ -63,18 +64,18 @@ class SignUpSerializer(Serializer):
           генерируем токен, отправляем письмо на почту
           и получаем данные из запроса (первый блок try)
         - Если пользователь регистрируется самостоятельно
-          создаем пользователя в бд, генерируем токен, отправляем письмо 
+          создаем пользователя в бд, генерируем токен, отправляем письмо
           и получаем данные из запроса (второй блок try)
         """
         email = validated_data['email']
         username = validated_data['username']
-        
+
         try:
             user = User.objects.get(**validated_data)
             confirmation_code = default_token_generator.make_token(user)
             send_confirm_code(username, email, confirmation_code)
             return validated_data
-        
+
         except Exception:
             try:
                 user = User.objects.create(**validated_data)
@@ -83,14 +84,14 @@ class SignUpSerializer(Serializer):
                 return user
             except IntegrityError:
                 raise UserFound(
-                    'Пользователь с таким username или email существует') 
-            
+                    'Пользователь с таким username или email существует')
+
 
 class ReceiveJWTSerializer(Serializer):
-    
+
     username = CharField(max_length=150)
     confirmation_code = CharField(max_length=50)
-            
+
     def validate(self, data):
         """
         - Если пользователь есть в бд, выдаем токены, иначе 404 ошибка.

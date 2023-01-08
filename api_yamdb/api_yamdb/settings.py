@@ -1,5 +1,3 @@
-import os
-
 from datetime import timedelta
 from pathlib import Path
 
@@ -186,4 +184,3 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'yamdb17@gmail.com'
 EMAIL_HOST_PASSWORD = 'ovnptlixrkrgdswc'
 EMAIL_PORT = 587
-

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    AdministrationViewSet, 
+    AdministrationViewSet,
     AdministrationByUsernameViewSet,
     AuthUserViewSet,
     SignUpViewSet,

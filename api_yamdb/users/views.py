@@ -34,6 +34,7 @@ class BaseUserSet(CreateModelMixin,
     - Если запрос на v1/users/me/ берем user-a из request
     - Если запрос на v1/users/<username>/ берем usera из kwargs
     """
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
 
@@ -46,7 +47,7 @@ class BaseUserSet(CreateModelMixin,
         serializer = self.get_serializer(instance,
                                          data=request.data,
                                          partial=partial,
-                                        )
+                                         )
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 

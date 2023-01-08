@@ -73,7 +73,8 @@ def load_genre_title():
     """
 
     data_list = read_csv('genre_title.csv')
-    [Title.objects.get(id=row['title_id']).genre.add(row['genre_id']) for row in data_list]
+    [Title.objects.get(id=row['title_id']).genre.add(
+        row['genre_id']) for row in data_list]
 
 
 def del_data():
