@@ -1,22 +1,24 @@
 from re import match
 
+from django.contrib.auth.tokens import default_token_generator
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.tokens import default_token_generator
 from rest_framework.serializers import (
     ModelSerializer,
     Serializer,
     CharField,
     EmailField
 )
-from .models import User
-from .utils import get_tokens_for_user, send_confirm_code
+
 from .exceptions import (
     UserFound,
     WrongData,
     CantChangeRole,
     NotValidUserName,
 )
+from .models import User
+from .utils import get_tokens_for_user, send_confirm_code
+
 
 
 class UserSerializer(ModelSerializer):

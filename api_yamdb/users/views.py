@@ -1,19 +1,19 @@
 from django.shortcuts import get_object_or_404
 
+from rest_framework.filters import SearchFilter
 from rest_framework.mixins import (
     CreateModelMixin,
     ListModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
 )
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.response import Response
-from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_200_OK
+from rest_framework.viewsets import GenericViewSet
 
+from .exceptions import UserNotFound
 from .models import User
 from .permissions import SuperUserOrAdmin, UserIsAuthenticated
 from .serializers import (
@@ -21,7 +21,6 @@ from .serializers import (
     SignUpSerializer,
     ReceiveJWTSerializer,
 )
-from .exceptions import UserNotFound
 
 
 class BaseUserSet(CreateModelMixin,
