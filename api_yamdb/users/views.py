@@ -29,11 +29,7 @@ class BaseUserViewSet(CreateModelMixin,
                       DestroyModelMixin,
                       RetrieveModelMixin,
                       GenericViewSet,):
-    """
-    Базовый ViewSet-для реализации CRUD
-    - Если запрос на v1/users/me/ берем user-a из request
-    - Если запрос на v1/users/<username>/ берем usera из kwargs
-    """
+    """Базовый ViewSet-для реализации CRUD."""
     ...
 
 
