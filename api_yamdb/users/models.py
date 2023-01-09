@@ -61,14 +61,6 @@ class User(AbstractUser):
         blank=True,
     )
 
-    class Meta:
-        ordering = ('id',)
-        verbose_name = ('User')
-        verbose_name_plural = ('Users')
-
-    def __str__(self):
-        return self.username
-
     @property
     def is_user(self):
         return self.role == USER
@@ -80,3 +72,11 @@ class User(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == MODERATOR
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = ('User')
+        verbose_name_plural = ('Users')
+
+    def __str__(self):
+        return self.username
