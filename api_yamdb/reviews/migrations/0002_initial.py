@@ -18,25 +18,30 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='review',
             name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to=settings.AUTH_USER_MODEL, verbose_name='Автор'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='reviews', to=settings.AUTH_USER_MODEL, verbose_name='Автор'),
         ),
         migrations.AddField(
             model_name='review',
             name='title',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='reviews.title', verbose_name='Произведение'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='reviews', to='reviews.title', verbose_name='Произведение'),
         ),
         migrations.AddField(
             model_name='comment',
             name='author',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to=settings.AUTH_USER_MODEL, verbose_name='Aвтор'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='comments', to=settings.AUTH_USER_MODEL, verbose_name='Aвтор'),
         ),
         migrations.AddField(
             model_name='comment',
             name='review',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='reviews.review', verbose_name='Отзыв'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='comments', to='reviews.review', verbose_name='Отзыв'),
         ),
         migrations.AddConstraint(
             model_name='review',
-            constraint=models.UniqueConstraint(fields=('title', 'author'), name='unique review'),
+            constraint=models.UniqueConstraint(
+                fields=('title', 'author'), name='unique review'),
         ),
     ]
