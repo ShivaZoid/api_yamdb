@@ -13,7 +13,6 @@ from rest_framework.serializers import (
 from .exceptions import (
     UserFound,
     WrongData,
-    CantChangeRole,
     NotValidUserName,
 )
 from .models import User
@@ -26,23 +25,13 @@ class UserSerializer(ModelSerializer):
         fields = ('username', 'email', 'first_name', 'last_name', 'bio',
                   'role')
 
-    def validate_role(self, value):
-        """
-        - Только admin и superuser могут изменять поле role.
-        """
-        if (self.context['request'].user.role != 'admin' and not
-                self.context['request'].user.is_superuser):
-            raise CantChangeRole('У вас нету прав для изменения role')
-        return value
 
-    def validate(self, data):
-        """
-        - Если в запросе есть username, проверяем его.
-        """
-        if data.get('username') is not None:
-            if match(r'^[\w.@+-]+', data['username']) is None:
-                raise NotValidUserName('Не корректный username')
-        return data
+class UserIsNotAdminSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio',
+                  'role')
+        read_only_fields = ('role',)
 
 
 class SignUpSerializer(Serializer):
@@ -53,7 +42,7 @@ class SignUpSerializer(Serializer):
     def validate(self, data):
         """Валидируем username."""
         username = data['username']
-        if username == 'me':
+        if username.lower() == 'me':
             raise NotValidUserName('Username "me" запрещен')
         if match(r'^[\w.@+-]+', data['username']) is None:
             raise NotValidUserName('Не корректный username')
@@ -63,29 +52,23 @@ class SignUpSerializer(Serializer):
         """
         - Если пользователя зарегестрировал admin
           генерируем токен, отправляем письмо на почту
-          и получаем данные из запроса (первый блок try)
+          и получаем данные из запроса
         - Если пользователь регистрируется самостоятельно
           создаем пользователя в бд, генерируем токен, отправляем письмо
-          и получаем данные из запроса (второй блок try)
+          и получаем данные из запроса
         """
         email = validated_data['email']
         username = validated_data['username']
 
         try:
-            user = User.objects.get(**validated_data)
+            user, _ = User.objects.get_or_create(**validated_data)
             confirmation_code = default_token_generator.make_token(user)
             send_confirm_code(username, email, confirmation_code)
             return validated_data
 
-        except Exception:
-            try:
-                user = User.objects.create(**validated_data)
-                confirmation_code = default_token_generator.make_token(user)
-                send_confirm_code(username, email, confirmation_code)
-                return user
-            except IntegrityError:
-                raise UserFound(
-                    'Пользователь с таким username или email существует')
+        except IntegrityError:
+            raise UserFound(
+                'Пользователь с таким username или email существует')
 
 
 class ReceiveJWTSerializer(Serializer):

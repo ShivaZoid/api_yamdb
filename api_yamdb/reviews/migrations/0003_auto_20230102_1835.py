@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='category',
             name='name',
-            field=models.CharField(max_length=256, verbose_name='Название категории'),
+            field=models.CharField(
+                max_length=256, verbose_name='Название категории'),
         ),
         migrations.AlterField(
             model_name='comment',
@@ -23,7 +24,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='genre',
             name='name',
-            field=models.CharField(max_length=256, verbose_name='Название жанра'),
+            field=models.CharField(
+                max_length=256, verbose_name='Название жанра'),
         ),
         migrations.AlterField(
             model_name='review',
@@ -33,6 +35,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='title',
             name='name',
-            field=models.CharField(db_index=True, max_length=256, verbose_name='Название произведения'),
+            field=models.CharField(
+                db_index=True, max_length=256, verbose_name='Название произведения'),
         ),
     ]
