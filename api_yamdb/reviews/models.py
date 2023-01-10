@@ -124,8 +124,8 @@ class Review(models.Model):
     score = models.IntegerField(
         'Оценка',
         validators=(
-            MinValueValidator(1),
-            MaxValueValidator(10)
+            MinValueValidator(1, message="Оценка ниже 1, невозможна"),
+            MaxValueValidator(10, message="Оценка больше 10, невозможна")
         )
     )
     pub_date = models.DateTimeField(
@@ -135,6 +135,7 @@ class Review(models.Model):
     )
 
     class Meta:
+        ordering = ['pub_date']
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
         constraints = [

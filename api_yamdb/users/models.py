@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, TextField, EmailField
 
+from .validators import validate_username
 
 USER = 'user'
 ADMIN = 'admin'
@@ -29,7 +30,8 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         blank=False,
-        null=False
+        null=False,
+        validators=(validate_username,),
     )
     email = EmailField(
         max_length=254,
@@ -59,9 +61,22 @@ class User(AbstractUser):
         blank=True,
     )
 
-    def __str__(self):
-        return self.username
+    @property
+    def is_user(self):
+        return self.role == USER
+
+    @property
+    def is_admin(self):
+        return self.role == ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == MODERATOR
 
     class Meta:
+        ordering = ('id',)
         verbose_name = ('User')
         verbose_name_plural = ('Users')
+
+    def __str__(self):
+        return self.username

@@ -1,12 +1,4 @@
-from rest_framework.exceptions import ValidationError, PermissionDenied
-
-
-class CantChangeRole(PermissionDenied):
-    ...
-
-
-class UserNotFound(ValidationError):
-    ...
+from rest_framework.exceptions import ValidationError
 
 
 class UserFound(ValidationError):
