@@ -78,7 +78,7 @@ class UserViewSet(BaseUserViewSet):
             data=request.data,
             partial=True)
         if request.method == 'PATCH':
-            if not request.user.is_admin or not request.user.is_superuser:
+            if not request.user.is_admin and not request.user.is_superuser:
                 serializer = UserIsNotAdminSerializer(
                     request.user,
                     data=request.data,
