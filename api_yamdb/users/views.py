@@ -73,22 +73,19 @@ class UserViewSet(BaseUserViewSet):
         permission_classes=(UserIsAuthenticated,),
         url_path='me')
     def me(self, request):
-        serializer = UserSerializer(request.user)
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True)
         if request.method == 'PATCH':
-            if request.user.is_admin or request.user.is_superuser:
-                serializer = UserSerializer(
-                    request.user,
-                    data=request.data,
-                    partial=True)
-            else:
+            if not request.user.is_admin or not request.user.is_superuser:
                 serializer = UserIsNotAdminSerializer(
                     request.user,
                     data=request.data,
                     partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=HTTP_200_OK)
-        return Response(serializer.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=HTTP_200_OK)
 
 
 class SignUpViewSet(BaseUserViewSet):
